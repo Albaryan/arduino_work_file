@@ -9,7 +9,7 @@ void loop() {
  
   if (!digitalRead(9)) {              //Check if pin 9 is pressed
     digitalWrite(8,!digitalRead(8));  //Reverse pin 8's value
-    while (!digitalRead(9));          //Loop if pin 9 is held
+    while (!digitalRead(9)){delay(10)};          //Loop if pin 9 is held
   };
   
 }
