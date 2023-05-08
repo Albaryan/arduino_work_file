@@ -50,6 +50,7 @@ void drawpixel(int index,int R,int G, int B) {
 
 void setup() {
   // put your setup code here, to run once:
+  Serial.begin(115200);
   pinMode(CLK_i,INPUT);
   pinMode(DT_i,INPUT);
   pinMode(SW_i,INPUT_PULLUP);
@@ -69,24 +70,27 @@ void loop() {
     while(!digitalRead(SW_i)); //tuş basma
 
 
+
   }
 
-  DT=digitalRead(5);
-  CLK=digitalRead(4);
+
+  DT=digitalRead(DT_i);
+  CLK=digitalRead(CLK_i);
 
   if (CLK!=CLK_o) {
     CLK_o=CLK;
     
     if (CLK==LOW && DT==LOW) {
       pixel++;
-      if (i==8) {
-        i=0;
+      if (pixel==8) {
+        pixel=0;
+
         
       }
     } else if (CLK==LOW && DT==HIGH) {
       pixel--;
-      if (i==-1){
-        i=7;
+      if (pixel==-1){
+        pixel=7;
         
       }
     }
