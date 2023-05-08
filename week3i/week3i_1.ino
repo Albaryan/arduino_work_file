@@ -9,7 +9,7 @@
 
 #define NUMPIXELS 8
 
-int i,j;
+int i,j,biggest,lowest;
 
 void draw(int color) {
   bool value[8]={0,0,0,0,0,0,0,0};
@@ -43,7 +43,55 @@ void drawpixel(int index,int R,int G, int B) {
       draw(0);
     }
   }
-  delayMicroseconds(40);
+  delayMicroseconds(50);
+}
+
+int bright(int R,int G, int B) {
+
+  Serial.println(R);
+  Serial.println(G);
+  Serial.println(B);
+  
+  if (((R==255) || (G==255)) || (B==255)) {
+      Serial.println("a");
+    if ((R<=G) && (R<=B)) {
+      lowest=R;
+    } else if ((G<=R) && (G<=B)) {
+      lowest =G;
+    } else {
+      lowest =B;
+    }
+
+    R=R-lowest;
+    G=G-lowest;
+    B=B-lowest;
+  } else{
+    R=R+50;
+    G=G+50;
+    B=B+50;
+    Serial.println("b");
+  }
+
+  if ((R>=G) && (R>=B)) {
+    biggest=R;
+  } else if ((G>=R) && (G>=B)) {
+    biggest =G;
+  } else if ((B>=R) && (B>=G)){
+    biggest = B;
+  }
+
+
+    Serial.println(biggest);
+  Serial.println(lowest);
+
+  if (biggest>=255) {
+    R=R-(biggest-255);
+    G=G-(biggest-255);
+    B=B-(biggest-255);
+  } 
+
+  return R,G,B;
+
 }
 
 
@@ -58,7 +106,8 @@ void setup() {
 }
 
 
-int R=0,G=255,B=0;
+
+int R=255,G=165,B=85;
 int pixel=0;
 int CLK_o=1;
 int CLK;
@@ -68,7 +117,7 @@ void loop() {
   drawpixel(pixel,R,G,B);
   if (!digitalRead(SW_i)){
     while(!digitalRead(SW_i)); //tuş basma
-
+    R,G,B=bright(R,G,B);
 
 
   }
@@ -79,19 +128,17 @@ void loop() {
 
   if (CLK!=CLK_o) {
     CLK_o=CLK;
-    
+
     if (CLK==LOW && DT==LOW) {
       pixel++;
-      if (pixel==8) {
+      if (pixel==NUMPIXELS) {
         pixel=0;
 
-        
       }
     } else if (CLK==LOW && DT==HIGH) {
       pixel--;
       if (pixel==-1){
-        pixel=7;
-        
+        pixel=NUMPIXELS-1;
       }
     }
   }
