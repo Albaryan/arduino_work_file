@@ -7,9 +7,16 @@
 #define DT_i 6
 #define SW_i 7
 
+#define R_o 0
+#define G_o 255
+#define B_o 255
+
 #define NUMPIXELS 8
 
 int i,j,biggest,lowest;
+
+float k[3]={R_o/255.0,G_o/255.0,B_o/255.0};
+float o[3]={R_o,G_o,B_o};
 
 void draw(int color) {
   bool value[8]={0,0,0,0,0,0,0,0};
@@ -46,59 +53,20 @@ void drawpixel(int index,int R,int G, int B) {
   delayMicroseconds(50);
 }
 
-int bright(int R,int G, int B) {
+int bright(int color, int index) {
+  color = color+(((k[index])*50)+0.5);
 
-  Serial.println(R);
-  Serial.println(G);
-  Serial.println(B);
+  if (color > o[index]) {
+    color=0;
+  }
+
+  return color;
   
-  if (((R==255) || (G==255)) || (B==255)) {
-      Serial.println("a");
-    if ((R<=G) && (R<=B)) {
-      lowest=R;
-    } else if ((G<=R) && (G<=B)) {
-      lowest =G;
-    } else {
-      lowest =B;
-    }
-
-    R=R-lowest;
-    G=G-lowest;
-    B=B-lowest;
-  } else{
-    R=R+50;
-    G=G+50;
-    B=B+50;
-    Serial.println("b");
-  }
-
-  if ((R>=G) && (R>=B)) {
-    biggest=R;
-  } else if ((G>=R) && (G>=B)) {
-    biggest =G;
-  } else if ((B>=R) && (B>=G)){
-    biggest = B;
-  }
-
-
-    Serial.println(biggest);
-  Serial.println(lowest);
-
-  if (biggest>=255) {
-    R=R-(biggest-255);
-    G=G-(biggest-255);
-    B=B-(biggest-255);
-  } 
-
-  return R,G,B;
-
 }
 
 
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
   pinMode(CLK_i,INPUT);
   pinMode(DT_i,INPUT);
   pinMode(SW_i,INPUT_PULLUP);
@@ -107,20 +75,20 @@ void setup() {
 
 
 
-int R=255,G=165,B=85;
+int colors[3]={R_o,G_o,B_o};
 int pixel=0;
 int CLK_o=1;
 int CLK;
 int DT;
 
 void loop() {
-  drawpixel(pixel,R,G,B);
+  drawpixel(pixel,colors[0],colors[1],colors[2]);
+
   if (!digitalRead(SW_i)){
-    while(!digitalRead(SW_i)); //tuş basma
-    R,G,B=bright(R,G,B);
-
-
-
+    while(!digitalRead(SW_i));
+    for (int m=0;m<3;m++) {
+      colors[m]=bright(colors[m],m);
+    }
   }
 
 
@@ -132,29 +100,16 @@ void loop() {
 
     if (CLK==LOW && DT==LOW) {
       pixel++;
-<<<<<<< HEAD
+
       if (pixel==NUMPIXELS) {
         pixel=0;
-
-=======
-      if (pixel==8) {
-        pixel=0;
-
-        
->>>>>>> 59f64ac842c5dfe4929a92cef6123d7def179259
       }
     } else if (CLK==LOW && DT==HIGH) {
       pixel--;
       if (pixel==-1){
-<<<<<<< HEAD
+
         pixel=NUMPIXELS-1;
-=======
-        pixel=7;
-        
->>>>>>> 59f64ac842c5dfe4929a92cef6123d7def179259
       }
     }
   }
-
 }
-
