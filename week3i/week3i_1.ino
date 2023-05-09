@@ -120,6 +120,7 @@ void loop() {
     R,G,B=bright(R,G,B);
 
 
+
   }
 
 
@@ -131,14 +132,26 @@ void loop() {
 
     if (CLK==LOW && DT==LOW) {
       pixel++;
+<<<<<<< HEAD
       if (pixel==NUMPIXELS) {
         pixel=0;
 
+=======
+      if (pixel==8) {
+        pixel=0;
+
+        
+>>>>>>> 59f64ac842c5dfe4929a92cef6123d7def179259
       }
     } else if (CLK==LOW && DT==HIGH) {
       pixel--;
       if (pixel==-1){
+<<<<<<< HEAD
         pixel=NUMPIXELS-1;
+=======
+        pixel=7;
+        
+>>>>>>> 59f64ac842c5dfe4929a92cef6123d7def179259
       }
     }
   }
